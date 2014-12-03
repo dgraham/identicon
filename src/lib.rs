@@ -3,7 +3,7 @@ extern crate png;
 use std::num::Float;
 use std::slice::Items;
 
-use png::{Image, RGB8};
+use png::{Image, PixelsByColorType};
 
 #[deriving(Show)]
 struct HSL {
@@ -107,7 +107,7 @@ impl<'a> Canvas<'a> {
         Image {
             width: self.width as u32,
             height: self.height as u32,
-            pixels: RGB8(pixels),
+            pixels: PixelsByColorType::RGB8(pixels),
         }
     }
 }
