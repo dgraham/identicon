@@ -1,0 +1,18 @@
+[package]
+name = "identicon"
+version = "0.0.1"
+authors = ["David Graham <david.malcom.graham@gmail.com>"]
+
+[lib]
+name="identicon"
+
+[dependencies.openssl]
+git = "https://github.com/sfackler/rust-openssl"
+
+[dependencies.png]
+git = "https://github.com/servo/rust-png"
+
+[[bin]]
+name = "identicon"
+test = false
+doc = false
