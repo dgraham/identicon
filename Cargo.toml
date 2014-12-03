@@ -2,9 +2,11 @@
 name = "identicon"
 version = "0.0.1"
 authors = ["David Graham <david.malcom.graham@gmail.com>"]
+description = "A port of GitHub's identicon algorithm to Rust."
+license = "MIT"
 
 [lib]
-name="identicon"
+name = "identicon"
 
 [dependencies.openssl]
 git = "https://github.com/sfackler/rust-openssl"
