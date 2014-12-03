@@ -3,6 +3,7 @@ name = "identicon"
 version = "0.0.1"
 authors = ["David Graham <david.malcom.graham@gmail.com>"]
 description = "A port of GitHub's identicon algorithm to Rust."
+repository = "https://github.com/dgraham/identicon"
 license = "MIT"
 
 [lib]
