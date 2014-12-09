@@ -13,7 +13,8 @@ name = "identicon"
 openssl = "0.2.2"
 
 [dependencies.png]
-git = "https://github.com/servo/rust-png"
+git = "https://github.com/dgraham/rust-png"
+branch = "write-png"
 
 [[bin]]
 name = "identicon"
