@@ -33,7 +33,7 @@ fn generate(input: Vec<u8>) -> Result<(), String> {
 
 fn hash() -> Option<Vec<u8>> {
     let mut hash = Hasher::new(HashType::MD5);
-    for result in io::stdin().lines() {
+    for result in io::stdin().lock().lines() {
         match result {
             Ok(line) => {
                 hash.update(line.as_bytes());
