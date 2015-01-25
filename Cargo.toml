@@ -10,8 +10,8 @@ license = "MIT"
 name = "identicon"
 
 [dependencies]
-image = "~0.2.0"
-openssl = "0.2.17"
+image = "~0.2"
+openssl = "~0.2"
 
 [dependencies.png]
 git = "https://github.com/dgraham/rust-png"
