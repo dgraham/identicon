@@ -1,19 +1,21 @@
 extern crate identicon;
 extern crate openssl;
-extern crate png;
+extern crate image;
 
 use std::io;
+use std::io::IoError;
 use std::os;
 
+use image::ColorType;
+use image::png::PNGEncoder;
 use openssl::crypto::hash::{Hasher, HashType};
-use png::write_png;
 
 use identicon::Identicon;
 
 fn main() {
     match hash() {
         Some(bytes) => {
-            match generate(bytes) {
+            match generate(&bytes[0..]) {
                 Ok(_) => (),
                 Err(e) => {
                     println!("{}", e);
@@ -25,10 +27,12 @@ fn main() {
     }
 }
 
-fn generate(input: Vec<u8>) -> Result<(), String> {
+fn generate(input: &[u8]) -> Result<(), IoError> {
     let identicon = Identicon::new(input);
-    let mut image = identicon.image();
-    write_png(&mut image, &mut io::stdout())
+    let image = identicon.image();
+    let (width, height) = image.dimensions();
+    let mut encoder = PNGEncoder::new(io::stdout());
+    encoder.encode(image.as_slice(), width, height, ColorType::RGB(8))
 }
 
 fn hash() -> Option<Vec<u8>> {

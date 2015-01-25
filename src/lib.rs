@@ -1,9 +1,9 @@
-extern crate png;
+extern crate image;
 
 use std::num::Float;
-use std::slice::Items;
+use std::slice::Iter;
 
-use png::{Image, PixelsByColorType};
+use image::{ImageBuffer, Rgb, RgbImage};
 
 #[deriving(Show)]
 struct HSL {
@@ -18,7 +18,7 @@ impl HSL {
     }
 
     // http://www.w3.org/TR/css3-color/#hsl-color
-    pub fn rgb(&self) -> RGB {
+    pub fn rgb(&self) -> Rgb<u8> {
         let hue = self.hue / 360.0;
         let sat = self.sat / 100.0;
         let lum = self.lum / 100.0;
@@ -35,10 +35,10 @@ impl HSL {
         let g = HSL::hue_to_rgb(a, b, hue);
         let b = HSL::hue_to_rgb(a, b, hue - 1.0/3.0);
 
-        RGB::new(
+        Rgb([
             (r * 255.0).round() as u8,
             (g * 255.0).round() as u8,
-            (b * 255.0).round() as u8)
+            (b * 255.0).round() as u8])
     }
 
     fn hue_to_rgb(a: f32, b: f32, hue: f32) -> f32 {
@@ -57,73 +57,19 @@ impl HSL {
     }
 }
 
-#[deriving(Show)]
-struct RGB {
-    red: u8,
-    green: u8,
-    blue: u8,
-}
-
-impl RGB {
-    pub fn new(red: u8, green: u8, blue: u8) -> RGB {
-        RGB { red: red, green: green, blue: blue }
-    }
-}
-
-struct Canvas<'a> {
-    width: uint,
-    height: uint,
-    pixels: Vec<Vec<&'a RGB>>,
-}
-
-impl<'a> Canvas<'a> {
-    pub fn new(width: uint, height: uint, background: &'a RGB) -> Canvas<'a> {
-        let pixels = Vec::from_fn(height, |_| Vec::from_elem(width, background));
-        Canvas {
-            width: width,
-            height: height,
-            pixels: pixels,
-        }
-    }
-
-    pub fn rect(&mut self, x0: uint, y0: uint, x1: uint, y1: uint, color: &'a RGB) {
-        for y in range(y0, y1) {
-            for x in range(x0, x1) {
-                self.pixels[y][x] = color;
-            }
-        }
-    }
-
-    pub fn image(&self) -> Image {
-        let mut pixels = Vec::with_capacity(self.width * self.height * 3);
-        for row in self.pixels.iter() {
-            for color in row.iter() {
-                pixels.push(color.red);
-                pixels.push(color.green);
-                pixels.push(color.blue);
-            }
-        }
-
-        Image {
-            width: self.width as u32,
-            height: self.height as u32,
-            pixels: PixelsByColorType::RGB8(pixels),
-        }
-    }
-}
-
 struct Nibbler<'a> {
     byte: Option<u8>,
-    bytes: &'a mut Items<'a, u8>,
+    bytes: Iter<'a, u8>,
 }
 
 impl<'a> Nibbler<'a> {
-    pub fn new(bytes: &'a mut Items<'a, u8>) -> Nibbler<'a> {
-        Nibbler { bytes: bytes, byte: None }
+    pub fn new(bytes: &[u8]) -> Nibbler {
+        Nibbler { bytes: bytes.iter(), byte: None }
     }
 }
 
-impl<'a> Iterator<u8> for Nibbler<'a> {
+impl<'a> Iterator for Nibbler<'a> {
+    type Item = u8;
     fn next(&mut self) -> Option<u8> {
         match self.byte {
             Some(value) => {
@@ -145,13 +91,13 @@ impl<'a> Iterator<u8> for Nibbler<'a> {
     }
 }
 
-pub struct Identicon {
-    source: Vec<u8>,
-    size: uint,
+pub struct Identicon<'a> {
+    source: &'a[u8],
+    size: u32,
 }
 
-impl Identicon {
-    pub fn new(source: Vec<u8>) -> Identicon {
+impl<'a> Identicon<'a> {
+    pub fn new(source: &[u8]) -> Identicon {
         Identicon { source: source, size: 420 }
     }
 
@@ -160,7 +106,7 @@ impl Identicon {
         ((value - vmin) * (dmax - dmin)) as f32 / ((vmax - vmin) + dmin) as f32
     }
 
-    fn foreground(&self) -> RGB {
+    fn foreground(&self) -> Rgb<u8> {
         // Use last 28 bits to determine HSL values.
         let h1 = (self.source[12] as u16 & 0x0f) << 8;
         let h2 = self.source[13] as u16;
@@ -176,43 +122,50 @@ impl Identicon {
         HSL::new(hue, 65.0 - sat, 75.0 - lum).rgb()
     }
 
-    pub fn image(&self) -> Image {
+    fn rect(image: &mut RgbImage, x0: u32, y0: u32, x1: u32, y1: u32, color: Rgb<u8>) {
+        for x in (x0..x1) {
+            for y in (y0..y1) {
+                image.put_pixel(x, y, color);
+            }
+        }
+    }
+
+    pub fn image(&self) -> RgbImage {
         let pixel_size = 70;
         let sprite_size = 5;
         let inner_size = sprite_size * pixel_size;
 
-        let background = RGB::new(240, 240, 240);
+        let background = Rgb([240, 240, 240]);
         let foreground = self.foreground();
 
-        let mut canvas = Canvas::new(self.size, self.size, &background);
+        let mut image: RgbImage = ImageBuffer::from_pixel(self.size, self.size, background);
 
         let half_axis = (sprite_size - 1) / 2;
-        let margin: int = pixel_size / 2;
+        let margin = pixel_size / 2;
 
-        let mut iter = &mut self.source.iter();
-        let mut nibbles = Nibbler::new(iter);
+        let mut nibbles = Nibbler::new(self.source);
         let mut x = half_axis * pixel_size;
 
         while x >= 0 {
             let mut y = 0;
             while y < inner_size {
                 if nibbles.next().unwrap() % 2 == 0 {
-                    canvas.rect(
-                        (x + margin) as uint,
-                        (y + margin) as uint,
-                        (x + pixel_size + margin) as uint,
-                        (y + pixel_size + margin) as uint,
-                        &foreground);
+                    Identicon::rect(&mut image,
+                        (x + margin) as u32,
+                        (y + margin) as u32,
+                        (x + pixel_size + margin) as u32,
+                        (y + pixel_size + margin) as u32,
+                        foreground);
 
                     // Mirror blocks across axis.
                     if x != half_axis * pixel_size {
-                        let x_start: int = 2 * half_axis * pixel_size - x;
-                        canvas.rect(
-                            (x_start + margin) as uint,
-                            (y + margin) as uint,
-                            (x_start + pixel_size + margin) as uint,
-                            (y + pixel_size + margin) as uint,
-                            &foreground);
+                        let x_start = 2 * half_axis * pixel_size - x;
+                        Identicon::rect(&mut image,
+                            (x_start + margin) as u32,
+                            (y + margin) as u32,
+                            (x_start + pixel_size + margin) as u32,
+                            (y + pixel_size + margin) as u32,
+                            foreground);
                     }
                 }
                 y += pixel_size;
@@ -220,6 +173,6 @@ impl Identicon {
             x -= pixel_size;
         }
 
-        canvas.image()
+        image
     }
 }

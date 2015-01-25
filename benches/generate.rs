@@ -15,6 +15,7 @@ fn generate(x: &mut Bencher) {
     x.iter(|| {
         let mut hash = Hasher::new(HashType::MD5);
         hash.update(input);
-        Identicon::new(hash.finalize()).image();
+        let bytes = hash.finalize();
+        Identicon::new(&bytes[0..]).image();
     });
 }
