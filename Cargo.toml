@@ -11,7 +11,7 @@ name = "identicon"
 
 [dependencies]
 image = "~0.2"
-openssl = "~0.2"
+openssl = "~0.4"
 
 [[bin]]
 name = "identicon"
