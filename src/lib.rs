@@ -5,7 +5,6 @@ use std::slice::Iter;
 
 use image::{ImageBuffer, Rgb, RgbImage};
 
-#[deriving(Show)]
 struct HSL {
     hue: f32,
     sat: f32,
