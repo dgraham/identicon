@@ -2,7 +2,7 @@ extern crate identicon;
 extern crate openssl;
 extern crate test;
 
-use openssl::crypto::hash::{Hasher, HashType};
+use openssl::crypto::hash::{hash, Type};
 use test::Bencher;
 
 use identicon::Identicon;
@@ -13,9 +13,7 @@ fn generate(x: &mut Bencher) {
     let input = source.as_bytes();
 
     x.iter(|| {
-        let mut hash = Hasher::new(HashType::MD5);
-        hash.update(input);
-        let bytes = hash.finalize();
+        let bytes = hash(Type::MD5, input);
         Identicon::new(&bytes[0..]).image();
     });
 }
