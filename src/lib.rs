@@ -1,6 +1,5 @@
 extern crate image;
 
-use std::num::Float;
 use std::slice::Iter;
 
 use image::{ImageBuffer, Rgb, RgbImage};
