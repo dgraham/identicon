@@ -29,10 +29,8 @@ fn hash() -> Result<Vec<u8>> {
     let mut hash = Hasher::new(Type::MD5);
     let input = io::stdin();
     let mut reader = input.lock();
-    match pipe(&mut reader, &mut hash) {
-        Ok(..) => Ok(hash.finish()),
-        Err(e) => Err(e),
-    }
+    try!(pipe(&mut reader, &mut hash));
+    Ok(hash.finish())
 }
 
 fn pipe(input: &mut Read, output: &mut Write) -> Result<usize> {
