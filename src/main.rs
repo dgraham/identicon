@@ -1,4 +1,3 @@
-#![feature(convert)]
 #![feature(exit_status)]
 
 extern crate identicon;
