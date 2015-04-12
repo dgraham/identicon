@@ -1,10 +1,7 @@
-#![feature(exit_status)]
-
 extern crate identicon;
 extern crate openssl;
 extern crate image;
 
-use std::env;
 use std::io;
 use std::io::{Read, Write, Result};
 
@@ -15,21 +12,8 @@ use openssl::crypto::hash::{Hasher, Type};
 use identicon::Identicon;
 
 fn main() {
-    match hash() {
-        Ok(bytes) => {
-            match generate(&bytes[..]) {
-                Ok(_) => (),
-                Err(e) => {
-                    println!("{}", e);
-                    env::set_exit_status(2);
-                },
-            }
-        },
-        Err(e) => {
-            println!("{}", e);
-            env::set_exit_status(1)
-        },
-    }
+    let bytes = hash().unwrap();
+    generate(&bytes[..]).unwrap();
 }
 
 fn generate(input: &[u8]) -> Result<()> {
