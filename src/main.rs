@@ -44,10 +44,15 @@ fn generate(input: &[u8]) -> Result<()> {
 fn hash() -> Result<Vec<u8>> {
     let mut hash = Hasher::new(Type::MD5);
     let input = io::stdin();
-    for result in input.lock().bytes() {
-        match result {
-            Ok(byte) => {
-                let _ = hash.write(&[byte]);
+    let mut reader = input.lock();
+    let mut buf = [0; 1024];
+    loop {
+        match reader.read(&mut buf) {
+            Ok(n) => {
+                if n == 0 {
+                    break;
+                }
+                let _ = hash.write(&buf[0..n]);
             },
             Err(e) => {
                 return Err(e)
