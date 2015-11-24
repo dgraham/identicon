@@ -21,7 +21,7 @@ fn generate(input: &[u8]) -> Result<()> {
     let image = identicon.image();
     let (width, height) = image.dimensions();
     let output = &mut io::stdout();
-    let mut encoder = PNGEncoder::new(output);
+    let encoder = PNGEncoder::new(output);
     encoder.encode(image.as_ref(), width, height, ColorType::RGB(8))
 }
 
