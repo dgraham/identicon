@@ -121,8 +121,8 @@ impl<'a> Identicon<'a> {
     }
 
     fn rect(image: &mut RgbImage, x0: u32, y0: u32, x1: u32, y1: u32, color: Rgb<u8>) {
-        for x in (x0..x1) {
-            for y in (y0..y1) {
+        for x in x0..x1 {
+            for y in y0..y1 {
                 image.put_pixel(x, y, color);
             }
         }
