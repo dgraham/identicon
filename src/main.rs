@@ -42,7 +42,7 @@ fn pipe(input: &mut Read, output: &mut Write) -> Result<usize> {
             n => {
                 try!(output.write(&buf[0..n]));
                 total += n;
-            },
+            }
         }
     }
     Ok(total)

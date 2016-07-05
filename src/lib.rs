@@ -12,7 +12,11 @@ struct HSL {
 
 impl HSL {
     pub fn new(hue: f32, sat: f32, lum: f32) -> HSL {
-        HSL { hue: hue, sat: sat, lum: lum }
+        HSL {
+            hue: hue,
+            sat: sat,
+            lum: lum,
+        }
     }
 
     // http://www.w3.org/TR/css3-color/#hsl-color
@@ -21,36 +25,41 @@ impl HSL {
         let sat = self.sat / 100.0;
         let lum = self.lum / 100.0;
 
-        let b =
-            if lum <= 0.5 {
-                lum * (sat + 1.0)
-            } else {
-                lum + sat - lum * sat
-            };
+        let b = if lum <= 0.5 {
+            lum * (sat + 1.0)
+        } else {
+            lum + sat - lum * sat
+        };
         let a = lum * 2.0 - b;
 
-        let r = HSL::hue_to_rgb(a, b, hue + 1.0/3.0);
+        let r = HSL::hue_to_rgb(a, b, hue + 1.0 / 3.0);
         let g = HSL::hue_to_rgb(a, b, hue);
-        let b = HSL::hue_to_rgb(a, b, hue - 1.0/3.0);
+        let b = HSL::hue_to_rgb(a, b, hue - 1.0 / 3.0);
 
-        Rgb([
-            (r * 255.0).round() as u8,
-            (g * 255.0).round() as u8,
-            (b * 255.0).round() as u8])
+        Rgb([(r * 255.0).round() as u8, (g * 255.0).round() as u8, (b * 255.0).round() as u8])
     }
 
     fn hue_to_rgb(a: f32, b: f32, hue: f32) -> f32 {
-        let h =
-            if hue < 0.0 {
-                hue + 1.0
-            } else if hue > 1.0 {
-                hue - 1.0
-            } else {
-                hue
-            };
-        if h < 1.0/6.0 { return a + (b - a) * 6.0 * h; }
-        if h < 1.0/2.0 { return b; }
-        if h < 2.0/3.0 { return a + (b - a) * (2.0/3.0 - h) * 6.0; }
+        let h = if hue < 0.0 {
+            hue + 1.0
+        } else if hue > 1.0 {
+            hue - 1.0
+        } else {
+            hue
+        };
+
+        if h < 1.0 / 6.0 {
+            return a + (b - a) * 6.0 * h;
+        }
+
+        if h < 1.0 / 2.0 {
+            return b;
+        }
+
+        if h < 2.0 / 3.0 {
+            return a + (b - a) * (2.0 / 3.0 - h) * 6.0;
+        }
+
         a
     }
 }
@@ -62,7 +71,10 @@ struct Nibbler<'a> {
 
 impl<'a> Nibbler<'a> {
     pub fn new(bytes: &[u8]) -> Nibbler {
-        Nibbler { bytes: bytes.iter(), byte: None }
+        Nibbler {
+            bytes: bytes.iter(),
+            byte: None,
+        }
     }
 }
 
@@ -73,7 +85,7 @@ impl<'a> Iterator for Nibbler<'a> {
             Some(value) => {
                 self.byte = None;
                 Some(value)
-            },
+            }
             None => {
                 match self.bytes.next() {
                     Some(value) => {
@@ -81,22 +93,25 @@ impl<'a> Iterator for Nibbler<'a> {
                         let lo = *value & 0x0f;
                         self.byte = Some(lo);
                         Some(hi >> 4)
-                    },
-                    None => None
+                    }
+                    None => None,
                 }
-            },
+            }
         }
     }
 }
 
 pub struct Identicon<'a> {
-    source: &'a[u8],
+    source: &'a [u8],
     size: u32,
 }
 
 impl<'a> Identicon<'a> {
     pub fn new(source: &[u8]) -> Identicon {
-        Identicon { source: source, size: 420 }
+        Identicon {
+            source: source,
+            size: 420,
+        }
     }
 
     // https://processing.org/reference/map_.html
@@ -149,21 +164,21 @@ impl<'a> Identicon<'a> {
             while y < inner_size {
                 if nibbles.next().unwrap() % 2 == 0 {
                     Identicon::rect(&mut image,
-                        (x + margin) as u32,
-                        (y + margin) as u32,
-                        (x + pixel_size + margin) as u32,
-                        (y + pixel_size + margin) as u32,
-                        foreground);
+                                    (x + margin) as u32,
+                                    (y + margin) as u32,
+                                    (x + pixel_size + margin) as u32,
+                                    (y + pixel_size + margin) as u32,
+                                    foreground);
 
                     // Mirror blocks across axis.
                     if x != half_axis * pixel_size {
                         let x_start = 2 * half_axis * pixel_size - x;
                         Identicon::rect(&mut image,
-                            (x_start + margin) as u32,
-                            (y + margin) as u32,
-                            (x_start + pixel_size + margin) as u32,
-                            (y + pixel_size + margin) as u32,
-                            foreground);
+                                        (x_start + margin) as u32,
+                                        (y + margin) as u32,
+                                        (x_start + pixel_size + margin) as u32,
+                                        (y + pixel_size + margin) as u32,
+                                        foreground);
                     }
                 }
                 y += pixel_size;
