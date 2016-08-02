@@ -61,3 +61,44 @@ impl HSL {
         a
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::HSL;
+    use image::Rgb;
+
+    #[test]
+    fn it_converts_black() {
+        let black = Rgb([0, 0, 0]);
+        let rgb = HSL::new(0.0, 0.0, 0.0).rgb();
+        assert_eq!(black, rgb);
+    }
+
+    #[test]
+    fn it_converts_white() {
+        let white = Rgb([255, 255, 255]);
+        let rgb = HSL::new(0.0, 0.0, 100.0).rgb();
+        assert_eq!(white, rgb);
+    }
+
+    #[test]
+    fn it_converts_red() {
+        let red = Rgb([255, 0, 0]);
+        let rgb = HSL::new(0.0, 100.0, 50.0).rgb();
+        assert_eq!(red, rgb);
+    }
+
+    #[test]
+    fn it_converts_green() {
+        let green = Rgb([0, 255, 0]);
+        let rgb = HSL::new(120.0, 100.0, 50.0).rgb();
+        assert_eq!(green, rgb);
+    }
+
+    #[test]
+    fn it_converts_blue() {
+        let blue = Rgb([0, 0, 255]);
+        let rgb = HSL::new(240.0, 100.0, 50.0).rgb();
+        assert_eq!(blue, rgb);
+    }
+}
