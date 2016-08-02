@@ -36,3 +36,16 @@ impl<'a> Iterator for Nibbler<'a> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Nibbler;
+
+    #[test]
+    fn it_iterates_nibbles() {
+        let bytes = vec![0x2a];
+        let nibbles = Nibbler::new(&bytes);
+        let result: Vec<u8> = nibbles.collect();
+        assert_eq!(vec![0x02, 0x0a], result);
+    }
+}

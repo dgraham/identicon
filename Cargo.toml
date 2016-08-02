@@ -15,5 +15,3 @@ openssl = "~0.7"
 
 [[bin]]
 name = "identicon"
-test = false
-doc = false

@@ -14,6 +14,7 @@ $ identicon < robots.txt > hubot.png
 ## Development
 
 ```
+$ cargo test
 $ cargo build
 ```
 
