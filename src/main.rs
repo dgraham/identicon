@@ -4,6 +4,7 @@ extern crate openssl;
 
 use std::io;
 use std::io::{Read, Write, Result};
+use std::process::exit;
 
 use image::ColorType;
 use image::png::PNGEncoder;
@@ -12,8 +13,13 @@ use openssl::hash::{Hasher, MessageDigest};
 use identicon::Identicon;
 
 fn main() {
-    let bytes = hash().unwrap();
-    generate(&bytes[..]).unwrap();
+    match hash().and_then(|bytes| generate(&bytes)) {
+        Ok(_) => (),
+        Err(e) => {
+            println!("{}", e);
+            exit(1);
+        }
+    }
 }
 
 fn generate(input: &[u8]) -> Result<()> {
