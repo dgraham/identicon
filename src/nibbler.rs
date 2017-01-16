@@ -16,6 +16,7 @@ impl<'a> Nibbler<'a> {
 
 impl<'a> Iterator for Nibbler<'a> {
     type Item = u8;
+
     fn next(&mut self) -> Option<u8> {
         match self.byte {
             Some(value) => {

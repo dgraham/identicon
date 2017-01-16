@@ -1,13 +1,13 @@
 extern crate identicon;
-extern crate openssl;
 extern crate image;
+extern crate openssl;
 
 use std::io;
 use std::io::{Read, Write, Result};
 
 use image::ColorType;
 use image::png::PNGEncoder;
-use openssl::crypto::hash::{Hasher, Type};
+use openssl::hash::{Hasher, MessageDigest};
 
 use identicon::Identicon;
 
@@ -26,11 +26,11 @@ fn generate(input: &[u8]) -> Result<()> {
 }
 
 fn hash() -> Result<Vec<u8>> {
-    let mut hash = Hasher::new(Type::MD5);
+    let mut hash = Hasher::new(MessageDigest::md5())?;
     let input = io::stdin();
     let mut reader = input.lock();
     pipe(&mut reader, &mut hash)?;
-    Ok(hash.finish())
+    Ok(hash.finish()?)
 }
 
 fn pipe(input: &mut Read, output: &mut Write) -> Result<usize> {
