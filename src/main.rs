@@ -8,7 +8,7 @@ use std::process::exit;
 
 use image::ColorType;
 use image::png::PNGEncoder;
-use openssl::hash::{Hasher, MessageDigest};
+use openssl::hash::{DigestBytes, Hasher, MessageDigest};
 
 use identicon::Identicon;
 
@@ -31,12 +31,12 @@ fn generate(input: &[u8]) -> Result<()> {
     encoder.encode(image.as_ref(), width, height, ColorType::RGB(8))
 }
 
-fn hash() -> Result<Vec<u8>> {
+fn hash() -> Result<DigestBytes> {
     let mut hash = Hasher::new(MessageDigest::md5())?;
     let input = io::stdin();
     let mut reader = input.lock();
     pipe(&mut reader, &mut hash)?;
-    Ok(hash.finish()?)
+    Ok(hash.finish2()?)
 }
 
 fn pipe(input: &mut Read, output: &mut Write) -> Result<usize> {
