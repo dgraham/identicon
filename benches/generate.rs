@@ -13,9 +13,7 @@ use identicon::Identicon;
 fn generate(x: &mut Bencher) {
     let input = "42".as_bytes();
     let md5 = MessageDigest::md5();
-
-    x.iter(|| match hash2(md5, input) {
-        Ok(bytes) => Identicon::new(&bytes).image(),
-        Err(e) => panic!(e),
-    });
+    let bytes = hash2(md5, input).unwrap();
+    let identicon = Identicon::new(&bytes);
+    x.iter(|| identicon.image());
 }
