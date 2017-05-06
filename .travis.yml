@@ -6,5 +6,12 @@ rust:
 matrix:
   allow_failures:
     - rust: nightly
+before_script:
+  - export PATH=$PATH:$HOME/.cargo/bin
+  - command -v rustfmt || cargo install rustfmt
+script:
+  - cargo fmt -- --write-mode=diff
+  - cargo build --verbose
+  - cargo test --verbose
 cache: cargo
 dist: trusty
