@@ -70,22 +70,26 @@ impl<'a> Identicon<'a> {
             let mut y = 0;
             while y < inner_size {
                 if nibbles.next().unwrap() % 2 == 0 {
-                    Identicon::rect(&mut image,
-                                    (x + margin) as u32,
-                                    (y + margin) as u32,
-                                    (x + pixel_size + margin) as u32,
-                                    (y + pixel_size + margin) as u32,
-                                    foreground);
+                    Identicon::rect(
+                        &mut image,
+                        (x + margin) as u32,
+                        (y + margin) as u32,
+                        (x + pixel_size + margin) as u32,
+                        (y + pixel_size + margin) as u32,
+                        foreground,
+                    );
 
                     // Mirror blocks across axis.
                     if x != half_axis * pixel_size {
                         let x_start = 2 * half_axis * pixel_size - x;
-                        Identicon::rect(&mut image,
-                                        (x_start + margin) as u32,
-                                        (y + margin) as u32,
-                                        (x_start + pixel_size + margin) as u32,
-                                        (y + pixel_size + margin) as u32,
-                                        foreground);
+                        Identicon::rect(
+                            &mut image,
+                            (x_start + margin) as u32,
+                            (y + margin) as u32,
+                            (x_start + pixel_size + margin) as u32,
+                            (y + pixel_size + margin) as u32,
+                            foreground,
+                        );
                     }
                 }
                 y += pixel_size;
