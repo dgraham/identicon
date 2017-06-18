@@ -10,8 +10,8 @@ license = "MIT"
 name = "identicon"
 
 [dependencies]
-image = "~0.13"
-openssl = "~0.9"
+image = "0.13"
+openssl = "0.9"
 
 [[bin]]
 name = "identicon"
