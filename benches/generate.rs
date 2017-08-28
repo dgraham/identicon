@@ -13,6 +13,6 @@ use identicon::Identicon;
 fn generate(x: &mut Bencher) {
     let input = "42".as_bytes();
     let bytes = Md5::digest(input);
-    let identicon = Identicon::new(bytes.as_slice());
+    let identicon = Identicon::new(&bytes);
     x.iter(|| identicon.image());
 }
