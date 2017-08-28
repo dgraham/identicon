@@ -1,14 +1,14 @@
 extern crate identicon;
 extern crate image;
-extern crate openssl;
+extern crate md_5 as md5;
 
 use std::io;
-use std::io::{Read, Write, Result};
+use std::io::Result;
 use std::process::exit;
 
 use image::ColorType;
 use image::png::PNGEncoder;
-use openssl::hash::{DigestBytes, Hasher, MessageDigest};
+use md5::{Digest, Md5};
 
 use identicon::Identicon;
 
@@ -31,25 +31,12 @@ fn generate(input: &[u8]) -> Result<()> {
     encoder.encode(image.as_ref(), width, height, ColorType::RGB(8))
 }
 
-fn hash() -> Result<DigestBytes> {
-    let mut hash = Hasher::new(MessageDigest::md5())?;
+fn hash() -> Result<[u8; 16]> {
     let input = io::stdin();
     let mut reader = input.lock();
-    pipe(&mut reader, &mut hash)?;
-    Ok(hash.finish2()?)
-}
+    let digest = Md5::digest_reader(&mut reader)?;
 
-fn pipe(input: &mut Read, output: &mut Write) -> Result<usize> {
-    let mut total = 0;
-    let mut buf = [0; 1024];
-    loop {
-        match input.read(&mut buf)? {
-            0 => break,
-            n => {
-                output.write(&buf[0..n])?;
-                total += n;
-            }
-        }
-    }
-    Ok(total)
+    let mut bytes = [0; 16];
+    bytes.copy_from_slice(&digest);
+    Ok(bytes)
 }
