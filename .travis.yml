@@ -14,4 +14,3 @@ script:
   - cargo build --verbose
   - cargo test --verbose
 cache: cargo
-dist: trusty
