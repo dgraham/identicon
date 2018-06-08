@@ -23,17 +23,15 @@ impl<'a> Iterator for Nibbler<'a> {
                 self.byte = None;
                 Some(value)
             }
-            None => {
-                match self.bytes.next() {
-                    Some(value) => {
-                        let hi = *value & 0xf0;
-                        let lo = *value & 0x0f;
-                        self.byte = Some(lo);
-                        Some(hi >> 4)
-                    }
-                    None => None,
+            None => match self.bytes.next() {
+                Some(value) => {
+                    let hi = *value & 0xf0;
+                    let lo = *value & 0x0f;
+                    self.byte = Some(lo);
+                    Some(hi >> 4)
                 }
-            }
+                None => None,
+            },
         }
     }
 }

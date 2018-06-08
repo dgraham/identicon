@@ -34,13 +34,11 @@ impl HSL {
         let g = HSL::hue_to_rgb(a, b, hue);
         let b = HSL::hue_to_rgb(a, b, hue - 1.0 / 3.0);
 
-        Rgb(
-            [
-                (r * 255.0).round() as u8,
-                (g * 255.0).round() as u8,
-                (b * 255.0).round() as u8,
-            ],
-        )
+        Rgb([
+            (r * 255.0).round() as u8,
+            (g * 255.0).round() as u8,
+            (b * 255.0).round() as u8,
+        ])
     }
 
     fn hue_to_rgb(a: f32, b: f32, hue: f32) -> f32 {

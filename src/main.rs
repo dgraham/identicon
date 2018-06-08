@@ -6,8 +6,8 @@ use std::io;
 use std::io::Result;
 use std::process::exit;
 
-use image::ColorType;
 use image::png::PNGEncoder;
+use image::ColorType;
 use md5::{Digest, Md5};
 
 use identicon::Identicon;
