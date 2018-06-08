@@ -1,7 +1,7 @@
 #![feature(test)]
 
 extern crate identicon;
-extern crate md_5 as md5;
+extern crate md5;
 extern crate test;
 
 use md5::{Digest, Md5};

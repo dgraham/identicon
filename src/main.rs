@@ -1,6 +1,6 @@
 extern crate identicon;
 extern crate image;
-extern crate md_5 as md5;
+extern crate md5;
 
 use std::io;
 use std::io::Result;
