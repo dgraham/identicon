@@ -7,8 +7,7 @@ matrix:
   allow_failures:
     - rust: nightly
 before_script:
-  - export PATH=$PATH:$HOME/.cargo/bin
-  - command -v rustfmt || cargo install rustfmt
+  - rustup component add rustfmt-preview
 script:
   - cargo fmt -- --write-mode=diff
   - cargo build --verbose
