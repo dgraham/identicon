@@ -76,12 +76,11 @@ impl<'a> Identicon<'a> {
 
         let mut image: RgbImage = ImageBuffer::from_pixel(self.size, self.size, background);
 
-        let mut x = 0;
-        let mut y = 0;
-
-        for row in self.pixels().chunks(sprite_size) {
-            for painted in row {
+        for (row, pix) in self.pixels().chunks(sprite_size).enumerate() {
+            for (col, painted) in pix.iter().enumerate() {
                 if *painted {
+                    let x = col * pixel_size;
+                    let y = row * pixel_size;
                     Identicon::rect(
                         &mut image,
                         (x + margin) as u32,
@@ -91,10 +90,7 @@ impl<'a> Identicon<'a> {
                         foreground,
                     );
                 }
-                x += pixel_size;
             }
-            x = 0;
-            y += pixel_size;
         }
 
         image
