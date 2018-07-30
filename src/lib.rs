@@ -50,26 +50,38 @@ impl<'a> Identicon<'a> {
         }
     }
 
+    fn pixels(&self) -> [bool; 25] {
+        let mut nibbles = Nibbler::new(self.source).map(|x| x % 2 == 0);
+        let mut pixels = [false; 25];
+        for col in (0..3).rev() {
+            for row in 0..5 {
+                let ix = col + (row * 5);
+                let mirror_col = 4 - col;
+                let mirror_ix = mirror_col + (row * 5);
+                let paint = nibbles.next().unwrap_or(false);
+                pixels[ix] = paint;
+                pixels[mirror_ix] = paint;
+            }
+        }
+        pixels
+    }
+
     pub fn image(&self) -> RgbImage {
         let pixel_size = 70;
         let sprite_size = 5;
-        let inner_size = sprite_size * pixel_size;
+        let margin = pixel_size / 2;
 
         let background = Rgb([240, 240, 240]);
         let foreground = self.foreground();
 
         let mut image: RgbImage = ImageBuffer::from_pixel(self.size, self.size, background);
 
-        let half_axis = (sprite_size - 1) / 2;
-        let margin = pixel_size / 2;
+        let mut x = 0;
+        let mut y = 0;
 
-        let mut nibbles = Nibbler::new(self.source);
-        let mut x = half_axis * pixel_size;
-
-        while x >= 0 {
-            let mut y = 0;
-            while y < inner_size {
-                if nibbles.next().unwrap() % 2 == 0 {
+        for row in self.pixels().chunks(sprite_size) {
+            for painted in row {
+                if *painted {
                     Identicon::rect(
                         &mut image,
                         (x + margin) as u32,
@@ -78,23 +90,11 @@ impl<'a> Identicon<'a> {
                         (y + pixel_size + margin) as u32,
                         foreground,
                     );
-
-                    // Mirror blocks across axis.
-                    if x != half_axis * pixel_size {
-                        let x_start = 2 * half_axis * pixel_size - x;
-                        Identicon::rect(
-                            &mut image,
-                            (x_start + margin) as u32,
-                            (y + margin) as u32,
-                            (x_start + pixel_size + margin) as u32,
-                            (y + pixel_size + margin) as u32,
-                            foreground,
-                        );
-                    }
                 }
-                y += pixel_size;
+                x += pixel_size;
             }
-            x -= pixel_size;
+            x = 0;
+            y += pixel_size;
         }
 
         image
