@@ -1,7 +1,3 @@
-extern crate identicon;
-extern crate image;
-extern crate md5;
-
 use std::io;
 use std::io::Result;
 use std::process::exit;

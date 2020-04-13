@@ -1,12 +1,8 @@
 #![feature(test)]
-
-extern crate identicon;
-extern crate md5;
 extern crate test;
 
 use md5::{Digest, Md5};
 use test::Bencher;
-
 use identicon::Identicon;
 
 #[bench]

@@ -1,5 +1,3 @@
-extern crate image;
-
 use image::Rgb;
 
 pub struct HSL {

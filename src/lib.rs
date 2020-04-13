@@ -1,5 +1,3 @@
-extern crate image;
-
 use image::{ImageBuffer, Rgb, RgbImage};
 
 use hsl::HSL;
