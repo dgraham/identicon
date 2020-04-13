@@ -28,15 +28,20 @@ fn generate(input: &[u8]) -> Result<()> {
     let (width, height) = image.dimensions();
     let output = &mut io::stdout();
     let encoder = PNGEncoder::new(output);
-    encoder.encode(image.as_ref(), width, height, ColorType::RGB(8))
+    encoder
+        .encode(image.as_ref(), width, height, ColorType::Rgb8)
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
 }
 
 fn hash() -> Result<[u8; 16]> {
     let input = io::stdin();
     let mut reader = input.lock();
-    let digest = Md5::digest_reader(&mut reader)?;
+    let mut digest = Md5::new();
+    io::copy(&mut reader, &mut digest)?;
+
+    let result = digest.result();
 
     let mut bytes = [0; 16];
-    bytes.copy_from_slice(&digest);
+    bytes.copy_from_slice(&result);
     Ok(bytes)
 }

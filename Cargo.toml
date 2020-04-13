@@ -10,9 +10,9 @@ license = "MIT"
 name = "identicon"
 
 [dependencies]
-digest = { version = "0.7", features = ["std"] }
-image = { version = "0.19", default-features = false, features = ["png_codec"] }
-md-5 = { version = "0.7", features = ["asm"] }
+digest = { version = "0.8.1", features = ["std"] }
+image = { version = "0.23.3", default-features = false, features = ["png"] }
+md-5 = { version = "0.8.0", features = ["asm"] }
 
 [[bin]]
 name = "identicon"
