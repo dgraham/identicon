@@ -1,9 +1,9 @@
 #![feature(test)]
 extern crate test;
 
+use identicon::Identicon;
 use md5::{Digest, Md5};
 use test::Bencher;
-use identicon::Identicon;
 
 #[bench]
 fn generate(x: &mut Bencher) {
