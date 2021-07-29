@@ -35,7 +35,7 @@ fn hash() -> Result<[u8; 16]> {
     let mut digest = Md5::new();
     io::copy(&mut reader, &mut digest)?;
 
-    let result = digest.result();
+    let result = digest.finalize();
 
     let mut bytes = [0; 16];
     bytes.copy_from_slice(&result);

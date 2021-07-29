@@ -11,9 +11,8 @@ edition = "2018"
 name = "identicon"
 
 [dependencies]
-digest = { version = "0.8.1", features = ["std"] }
 image = { version = "0.23.3", default-features = false, features = ["png"] }
-md-5 = { version = "0.8.0", features = ["asm"] }
+md-5 = { version = "0.9.1", features = ["asm"] }
 
 [[bin]]
 name = "identicon"
