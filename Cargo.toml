@@ -7,13 +7,18 @@ repository = "https://github.com/dgraham/identicon"
 license = "MIT"
 edition = "2018"
 
+[features]
+default = ["build-bin"]
+build-bin = ["md-5"]
+
 [lib]
 name = "identicon"
 
 [dependencies]
 digest = { version = "0.8.1", features = ["std"] }
 image = { version = "0.23.3", default-features = false, features = ["png"] }
-md-5 = { version = "0.8.0", features = ["asm"] }
+md-5 = { version = "0.8.0", features = ["asm"], optional = true }
 
 [[bin]]
 name = "identicon"
+required-features = ["build-bin"]

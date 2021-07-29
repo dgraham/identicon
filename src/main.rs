@@ -1,3 +1,5 @@
+#![cfg(feature = "build-bin")]
+
 use std::io;
 use std::io::Result;
 use std::process::exit;
