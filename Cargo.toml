@@ -1,6 +1,6 @@
 [package]
 name = "identicon"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["David Graham <david.malcom.graham@gmail.com>"]
 description = "A port of GitHub's identicon algorithm to Rust."
 repository = "https://github.com/dgraham/identicon"
