@@ -8,11 +8,7 @@ pub struct HSL {
 
 impl HSL {
     pub fn new(hue: f32, sat: f32, lum: f32) -> HSL {
-        HSL {
-            hue: hue,
-            sat: sat,
-            lum: lum,
-        }
+        HSL { hue, sat, lum }
     }
 
     // http://www.w3.org/TR/css3-color/#hsl-color
