@@ -13,10 +13,7 @@ pub struct Identicon<'a> {
 
 impl<'a> Identicon<'a> {
     pub fn new(source: &[u8]) -> Identicon {
-        Identicon {
-            source: source,
-            size: 420,
-        }
+        Identicon { source, size: 420 }
     }
 
     // https://processing.org/reference/map_.html
