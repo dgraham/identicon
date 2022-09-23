@@ -4,7 +4,7 @@ use std::io;
 use std::io::Result;
 use std::process::exit;
 
-use image::png::PngEncoder;
+use image::{codecs::png::PngEncoder, ImageEncoder};
 use image::ColorType;
 use md5::{Digest, Md5};
 
@@ -27,7 +27,7 @@ fn generate(input: &[u8]) -> Result<()> {
     let output = &mut io::stdout();
     let encoder = PngEncoder::new(output);
     encoder
-        .encode(image.as_ref(), width, height, ColorType::Rgb8)
+        .write_image(image.as_ref(), width, height, ColorType::Rgb8)
         .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
 }
 
