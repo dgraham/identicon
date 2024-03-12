@@ -1,18 +1,14 @@
 use image::Rgb;
 
-pub struct HSL {
+pub struct Hsl {
     hue: f32,
     sat: f32,
     lum: f32,
 }
 
-impl HSL {
-    pub fn new(hue: f32, sat: f32, lum: f32) -> HSL {
-        HSL {
-            hue: hue,
-            sat: sat,
-            lum: lum,
-        }
+impl Hsl {
+    pub fn new(hue: f32, sat: f32, lum: f32) -> Hsl {
+        Hsl { hue, sat, lum }
     }
 
     // http://www.w3.org/TR/css3-color/#hsl-color
@@ -28,9 +24,9 @@ impl HSL {
         };
         let a = lum * 2.0 - b;
 
-        let r = HSL::hue_to_rgb(a, b, hue + 1.0 / 3.0);
-        let g = HSL::hue_to_rgb(a, b, hue);
-        let b = HSL::hue_to_rgb(a, b, hue - 1.0 / 3.0);
+        let r = Hsl::hue_to_rgb(a, b, hue + 1.0 / 3.0);
+        let g = Hsl::hue_to_rgb(a, b, hue);
+        let b = Hsl::hue_to_rgb(a, b, hue - 1.0 / 3.0);
 
         Rgb([
             (r * 255.0).round() as u8,
@@ -66,41 +62,41 @@ impl HSL {
 
 #[cfg(test)]
 mod tests {
-    use super::HSL;
+    use super::Hsl;
     use image::Rgb;
 
     #[test]
     fn it_converts_black() {
         let black = Rgb([0, 0, 0]);
-        let rgb = HSL::new(0.0, 0.0, 0.0).rgb();
+        let rgb = Hsl::new(0.0, 0.0, 0.0).rgb();
         assert_eq!(black, rgb);
     }
 
     #[test]
     fn it_converts_white() {
         let white = Rgb([255, 255, 255]);
-        let rgb = HSL::new(0.0, 0.0, 100.0).rgb();
+        let rgb = Hsl::new(0.0, 0.0, 100.0).rgb();
         assert_eq!(white, rgb);
     }
 
     #[test]
     fn it_converts_red() {
         let red = Rgb([255, 0, 0]);
-        let rgb = HSL::new(0.0, 100.0, 50.0).rgb();
+        let rgb = Hsl::new(0.0, 100.0, 50.0).rgb();
         assert_eq!(red, rgb);
     }
 
     #[test]
     fn it_converts_green() {
         let green = Rgb([0, 255, 0]);
-        let rgb = HSL::new(120.0, 100.0, 50.0).rgb();
+        let rgb = Hsl::new(120.0, 100.0, 50.0).rgb();
         assert_eq!(green, rgb);
     }
 
     #[test]
     fn it_converts_blue() {
         let blue = Rgb([0, 0, 255]);
-        let rgb = HSL::new(240.0, 100.0, 50.0).rgb();
+        let rgb = Hsl::new(240.0, 100.0, 50.0).rgb();
         assert_eq!(blue, rgb);
     }
 }
