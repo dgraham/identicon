@@ -26,3 +26,7 @@ required-features = ["build-bin"]
 [[bench]]
 name = "generate"
 required-features = ["unstable-bench"]
+
+[profile.release]
+strip = true
+panic = "abort"
