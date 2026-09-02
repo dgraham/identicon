@@ -4,8 +4,8 @@ use std::io::Result;
 use std::io::{self, Read};
 use std::process::exit;
 
-use image::ColorType;
-use image::png::PngEncoder;
+use image::codecs::png::PngEncoder;
+use image::{ColorType, ImageEncoder};
 use md5::{Digest, Md5};
 
 use identicon::Identicon;
@@ -27,7 +27,7 @@ fn generate(input: &[u8]) -> Result<()> {
     let output = &mut io::stdout();
     let encoder = PngEncoder::new(output);
     encoder
-        .encode(image.as_ref(), width, height, ColorType::Rgb8)
+        .write_image(image.as_ref(), width, height, ColorType::Rgb8.into())
         .map_err(io::Error::other)
 }
 
