@@ -1,45 +1,30 @@
-on: [push, pull_request]
 name: Build
+on: [push, pull_request]
+env:
+  CARGO_TERM_COLOR: always
 jobs:
-  check:
-    name: cargo check
+  build:
+    name: cargo build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
+    - uses: actions/checkout@v7
+    - name: cargo check
+      run: cargo check --all-targets
+    - name: cargo build
+      run: cargo build
   test:
     name: cargo test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
-  fmt:
+    - uses: actions/checkout@v7
+    - name: cargo test
+      run: cargo test
+  lint:
     name: cargo fmt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - run: rustup component add rustfmt
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
-
+    - uses: actions/checkout@v7
+    - name: cargo fmt
+      run: cargo fmt --all --check
+    - name: cargo clippy
+      run: cargo clippy --all-targets

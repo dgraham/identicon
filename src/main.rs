@@ -1,11 +1,11 @@
 #![cfg(feature = "build-bin")]
 
-use std::io;
 use std::io::Result;
+use std::io::{self, Read};
 use std::process::exit;
 
-use image::png::PngEncoder;
 use image::ColorType;
+use image::png::PngEncoder;
 use md5::{Digest, Md5};
 
 use identicon::Identicon;
@@ -28,14 +28,18 @@ fn generate(input: &[u8]) -> Result<()> {
     let encoder = PngEncoder::new(output);
     encoder
         .encode(image.as_ref(), width, height, ColorType::Rgb8)
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+        .map_err(io::Error::other)
 }
 
 fn hash() -> Result<[u8; 16]> {
     let input = io::stdin();
     let mut reader = input.lock();
     let mut digest = Md5::new();
-    io::copy(&mut reader, &mut digest)?;
+    let mut buffer = [0; 8 * 1024];
+
+    while let bytes_read @ 1.. = reader.read(&mut buffer)? {
+        digest.update(&buffer[..bytes_read]);
+    }
 
     let result = digest.finalize();
 

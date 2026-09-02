@@ -6,7 +6,7 @@ pub struct Nibbler<'a> {
 }
 
 impl<'a> Nibbler<'a> {
-    pub fn new(bytes: &[u8]) -> Nibbler {
+    pub fn new(bytes: &[u8]) -> Nibbler<'_> {
         Nibbler {
             bytes: bytes.iter(),
             byte: None,

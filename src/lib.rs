@@ -1,6 +1,6 @@
 use image::{ImageBuffer, Rgb, RgbImage};
 
-use hsl::HSL;
+use hsl::Hsl;
 use nibbler::Nibbler;
 
 mod hsl;
@@ -12,11 +12,8 @@ pub struct Identicon<'a> {
 }
 
 impl<'a> Identicon<'a> {
-    pub fn new(source: &[u8]) -> Identicon {
-        Identicon {
-            source: source,
-            size: 420,
-        }
+    pub fn new(source: &[u8]) -> Identicon<'_> {
+        Identicon { source, size: 420 }
     }
 
     // https://processing.org/reference/map_.html
@@ -37,7 +34,7 @@ impl<'a> Identicon<'a> {
         let sat = Identicon::map(s, 0, 255, 0, 20);
         let lum = Identicon::map(l, 0, 255, 0, 20);
 
-        HSL::new(hue, 65.0 - sat, 75.0 - lum).rgb()
+        Hsl::new(hue, 65.0 - sat, 75.0 - lum).rgb()
     }
 
     fn rect(image: &mut RgbImage, x0: u32, y0: u32, x1: u32, y1: u32, color: Rgb<u8>) {
